@@ -1,7 +1,7 @@
 module SimpleForum
   module Admin
     class CategoriesController < ::SimpleForum::Admin::BaseController
-      before_filter :cleanup_params
+      # before_filter :cleanup_params
       def index
         @categories = SimpleForum::Category.default_order.all
 

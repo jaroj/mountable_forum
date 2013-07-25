@@ -6,7 +6,7 @@ Make sure you have model representing user. Default is User class. You can chang
 User model must respond to 'name'.
 
 Add simple_forum to your Rails 3 Gemfile
-    gem "simple_forum", :git => "git@github.com:galdomedia/mountable_forum.git"
+    gem "simple_forum", :git => "git@github.com:jaroj/mountable_forum.git"
 
 And install gems with bundler
     bundle install
