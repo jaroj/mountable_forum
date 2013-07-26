@@ -6,7 +6,7 @@ module SimpleForum
                :class_name => "SimpleForum::Forum", :counter_cache => true
 
     has_many :posts,
-             :order => "#{SimpleForum::Post.quoted_table_name}.created_at ASC",
+             -> { order "#{SimpleForum::Post.quoted_table_name}.created_at ASC" },
              :class_name => "SimpleForum::Post",
              :conditions => SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"],
              :dependent => :delete_all
@@ -26,7 +26,6 @@ module SimpleForum
     has_one :first_post,
             :order => "#{SimpleForum::Post.quoted_table_name}.created_at ASC",
             :class_name => "SimpleForum::Post"
-
 
     validates :title, :forum, :presence => true
     validates :user, :presence => true, :on => :create
