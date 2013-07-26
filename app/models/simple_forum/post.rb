@@ -23,7 +23,7 @@ module SimpleForum
     after_create :notify_user
     after_destroy :update_cached_fields
 
-    scope :recent, order("#{quoted_table_name}.created_at DESC")
+    scope :recent, -> { order("#{quoted_table_name}.created_at DESC") }
 
     #attr_accessible :body
     validates :topic, :forum, :user, :presence => true

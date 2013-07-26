@@ -33,7 +33,7 @@ module SimpleForum
              :through => :moderatorships,
              :source => :user
 
-    scope :default_order, order("#{quoted_table_name}.position ASC, #{quoted_table_name}.id ASC")
+    scope :default_order, -> { order("#{quoted_table_name}.position ASC, #{quoted_table_name}.id ASC") }
 
     validates :name, :presence => true
     validates :position, :presence => true, :numericality => {:only_integer => true, :allow_nil => true}

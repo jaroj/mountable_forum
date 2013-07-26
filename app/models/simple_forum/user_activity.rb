@@ -37,7 +37,7 @@ module SimpleForum
 
     belongs_to :memoryable, :polymorphic => true
 
-    scope :only_read, where("#{quoted_table_name}.read_at IS NOT NULL")
+    scope :only_read, -> { where("#{quoted_table_name}.read_at IS NOT NULL") }
 
     def self.recent_activity_for_user(user)
       if user && user.persisted?
