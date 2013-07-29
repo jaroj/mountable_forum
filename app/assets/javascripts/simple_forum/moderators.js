@@ -22,7 +22,7 @@
             }, 300);
         });
 
-        $('a.add-moderator').live('click', function () {
+        $(document).on('click', 'a.add-moderator', function () {
             var $this = $(this),
                 user_id = $this.data('user_id'),
                 user_name = $this.data('user_name');
@@ -31,7 +31,7 @@
             return false;
         });
 
-        $('a.remove-moderator').live('click', function () {
+        $(document).on('click', 'a.remove-moderator', function () {
             var $this = $(this);
             $this.closest('li').remove();
             return false;
