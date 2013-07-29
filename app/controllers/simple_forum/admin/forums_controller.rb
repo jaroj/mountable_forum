@@ -4,7 +4,7 @@ module SimpleForum
 
       def search_users
         user_class = instance_eval(&SimpleForum.invoke(:user_class))
-        @users = user_class.where(["#{user_class.quoted_table_name}.email LIKE ?", "%#{params[:user_email_like].to_s.gsub(/[\%\_]/) { |m| "\\#{m}" }}%"]).limit(16)
+        @users = user_class.where(["#{user_class.quoted_table_name}.name LIKE ?", "%#{params[:user_email_like].to_s.gsub(/[\%\_]/) { |m| "\\#{m}" }}%"]).limit(16)
 
         respond_to do |format|
           format.json do
