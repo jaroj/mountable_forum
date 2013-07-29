@@ -20,7 +20,7 @@
 
         <li class="input stringish">
           <%= label_tag 'search_users_input', t('simple_forum.admin/forums.search_users'), :class => 'label' %>
-          <%= text_field_tag :user_name_like, "", :id => 'search_users_input', :placeholder => t('simple_forum.admin/forums.search_users', :default => 'Serach users') %>
+          <%= text_field_tag :user_email_like, "", :id => 'search_users_input', :placeholder => t('simple_forum.admin/forums.search_users', :default => 'Serach users') %>
           <ul id="search_users_result"></ul>
           <script type="text/javascript">
               simple_forum.moderator_template = "<%= escape_javascript(render(:partial => 'moderator', :locals => {:f => f, :moderator => OpenStruct.new(:name => "temp_user_name", :id => "temp_user_id")})) %>";
