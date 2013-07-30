@@ -8,7 +8,7 @@ module SimpleForum
 
         respond_to do |format|
           format.json do
-            render :json => @users.inject({}) { |hash, u| hash[u.id] = u.name; hash }
+            render :json => @users.inject({}) { |hash, u| hash[u.id] = u.login; hash }
           end
         end
       end
