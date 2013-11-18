@@ -7,7 +7,7 @@ module SimpleForum
                :class_name => instance_eval(&SimpleForum.invoke(:user_class)).name
 
     validates :forum, :user, :presence => true
-    validates :user_id, :uniqueness => {:scope => :forum_id, :allow_nil => true}
+    # validates :user_id, :uniqueness => {:scope => :forum_id, :allow_nil => true}
 
     #attr_accessible :forum_id, :user_id
 
