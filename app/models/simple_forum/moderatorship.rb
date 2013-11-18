@@ -6,7 +6,7 @@ module SimpleForum
     belongs_to :user,
                :class_name => instance_eval(&SimpleForum.invoke(:user_class)).name
 
-    validates :forum_id, :user_id, :presence => true
+    validates :user, :presence => true
     validates :user_id, :uniqueness => {:scope => :forum_id, :allow_nil => true}
 
     #attr_accessible :forum_id, :user_id
