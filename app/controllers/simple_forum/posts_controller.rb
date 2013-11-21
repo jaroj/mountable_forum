@@ -86,10 +86,10 @@ module SimpleForum
             if Topic.exists?(@topic)
               redirect_to forum_topic_path(@forum, @topic), :notice => t('simple_forum.controllers.posts.post_deleted')
             else
-              redirect_to forum_topics_path(@forum), :notice => t('simple_forum.controllers.posts.post_deleted')
+              redirect_to forum_path(@forum), :notice => t('simple_forum.controllers.posts.post_deleted')
             end
           else
-            redirect_to forum_topic_path(@topic), :alert => t('simple_forum.controllers.posts.post_cant_be_deleted')
+            redirect_to forum_topic_path(@forum, @topic), :alert => t('simple_forum.controllers.posts.post_cant_be_deleted')
           end
         end
         format.js
