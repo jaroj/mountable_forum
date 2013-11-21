@@ -83,9 +83,13 @@ module SimpleForum
       respond_to do |format|
         format.html do
           if @success
-            redirect_to :back, :notice => t('simple_forum.controllers.posts.post_deleted')
+            if Topic.exists?(@topic)
+              redirect_to forum_topic_path(@forum, @topic), :notice => t('simple_forum.controllers.posts.post_deleted')
+            else
+              redirect_to forum_topics_path(@forum), :notice => t('simple_forum.controllers.posts.post_deleted')
+            end
           else
-            redirect_to :back, :alert => t('simple_forum.controllers.posts.post_cant_be_deleted')
+            redirect_to forum_topic_path(@topic), :alert => t('simple_forum.controllers.posts.post_cant_be_deleted')
           end
         end
         format.js
