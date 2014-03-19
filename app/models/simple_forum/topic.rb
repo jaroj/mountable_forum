@@ -20,11 +20,13 @@ module SimpleForum
                :class_name => "SimpleForum::Post"
 
     has_one :last_post,
-                :order => "#{SimpleForum::Post.quoted_table_name}.created_at DESC",
-                :class_name => "SimpleForum::Post"
+            :order => "#{SimpleForum::Post.quoted_table_name}.created_at DESC",
+            :conditions => SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"],
+            :class_name => "SimpleForum::Post"
 
     has_one :first_post,
             :order => "#{SimpleForum::Post.quoted_table_name}.created_at ASC",
+            :conditions => SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"],
             :class_name => "SimpleForum::Post"
 
 
@@ -47,7 +49,7 @@ module SimpleForum
     #attr_accessible :title, :body
 
     def update_cached_post_fields(post)
-      if remaining_post = post.frozen? ? last_post : post
+      if remaining_post = post.is_deleted ? last_post : post
         self.class.update_all({:last_updated_at => remaining_post.created_at,
                                :recent_post_id => remaining_post.id,
                                :posts_count => posts.count(:id)
