@@ -2,10 +2,10 @@
   <div class="secondary-navigation">
     <ul class="wat-cf">
       <li>
-        <%= link_to "#{t("web-app-theme.list", :default => "List")}", simple_forum.admin_forums_path %>
+        <%= link_to "#{t("web-app-theme.list", default: "List")}", simple_forum.admin_forums_path %>
       </li>
       <li>
-        <%= link_to "#{t("web-app-theme.edit", :default => "Edit")}", simple_forum.edit_admin_forum_path(resource) %>
+        <%= link_to "#{t("web-app-theme.edit", default: "Edit")}", simple_forum.edit_admin_forum_path(resource) %>
       </li>
     </ul>
   </div>
@@ -53,7 +53,7 @@
       <div>
         <ul>
           <% resource.topics.find_each do |topic| %>
-            <li><%= topic.id %>. <%= topic.title %> <%= link_to t('simple_forum.delete', :default=>"Delete"), simple_forum.admin_forum_topic_path(resource, topic), :method => :delete, :confirm => t('simple_forum.are_you_sure', :default => 'Are you sure?') %></li>
+            <li><%= topic.id %>. <%= topic.title %> <%= link_to t('simple_forum.delete', defaul: "Delete"), simple_forum.admin_forum_topic_path(resource, topic), method: :delete, data: { confirm: t('simple_forum.are_you_sure', default: 'Are you sure?')} %></li>
           <% end %>
         </ul>
       </div>
