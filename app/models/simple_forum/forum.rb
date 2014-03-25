@@ -3,7 +3,7 @@ module SimpleForum
     #acts_as_nested_set
 
     has_many :topics,
-             -> { all.to_a.order: "#{SimpleForum::Topic.quoted_table_name}.last_updated_at DESC" },
+             -> { order("#{SimpleForum::Topic.quoted_table_name}.last_updated_at DESC") },
              dependent: :destroy,
              class_name: "SimpleForum::Topic"
 
@@ -11,11 +11,11 @@ module SimpleForum
                class_name: 'SimpleForum::Topic'
 
     has_many :posts,
-             -> { all.to_a.order: "#{SimpleForum::Post.quoted_table_name}.created_at DESC", SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"] },
+             -> { order("#{SimpleForum::Post.quoted_table_name}.created_at DESC"), SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"] },
              class_name: 'SimpleForum::Post'
 
     has_many :all_posts,
-             -> {  all.to_a.order: "#{SimpleForum::Post.quoted_table_name}.created_at ASC" },
+             -> { order("#{SimpleForum::Post.quoted_table_name}.created_at ASC") },
              class_name: "SimpleForum::Post",
              dependent: :delete_all
 
