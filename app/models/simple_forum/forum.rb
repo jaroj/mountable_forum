@@ -11,7 +11,7 @@ module SimpleForum
                class_name: 'SimpleForum::Topic'
 
     has_many :posts,
-             -> { order("#{SimpleForum::Post.quoted_table_name}.created_at DESC"), SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"] },
+             -> { where(SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"]).order("#{SimpleForum::Post.quoted_table_name}.created_at DESC") },
              class_name: 'SimpleForum::Post'
 
     has_many :all_posts,
