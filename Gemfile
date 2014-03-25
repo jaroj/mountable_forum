@@ -13,6 +13,7 @@ gem "pg"
 #gem 'web-app-theme', :git => 'git://github.com/pilu/web-app-theme.git'
 gem "bootstrap-sass", "~> 2.2.1.0"
 gem 'simple_form'
+gem 'activerecord-session_store'
 
 group :assets do
   gem 'coffee-rails'
