@@ -1,39 +1,36 @@
 module SimpleForum
   class Topic < ::ActiveRecord::Base
-    belongs_to :user, :class_name => instance_eval(&SimpleForum.invoke(:user_class)).name
+    belongs_to :user, class_name: instance_eval(&SimpleForum.invoke(:user_class)).name
 
     belongs_to :forum,
-               :class_name => "SimpleForum::Forum", :counter_cache => true
+               class_name: "SimpleForum::Forum", counter_cache: true
 
     has_many :posts,
-             :order => "#{SimpleForum::Post.quoted_table_name}.created_at ASC",
-             :class_name => "SimpleForum::Post",
-             :conditions => SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"],
-             :dependent => :delete_all
+             -> { where(SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"]).order("#{SimpleForum::Post.quoted_table_name}.created_at ASC") },
+             class_name: "SimpleForum::Post",
+             dependent: :delete_all
 
     has_many :all_posts,
-             :order => "#{SimpleForum::Post.quoted_table_name}.created_at ASC",
-             :class_name => "SimpleForum::Post",
-             :dependent => :delete_all
+             -> { order("#{SimpleForum::Post.quoted_table_name}.created_at ASC") },
+             class_name: "SimpleForum::Post",
+             dependent: :delete_all
 
     belongs_to :recent_post,
-               :class_name => "SimpleForum::Post"
+               class_name: "SimpleForum::Post"
 
     has_one :last_post,
-            :order => "#{SimpleForum::Post.quoted_table_name}.created_at DESC",
-            :conditions => SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"],
-            :class_name => "SimpleForum::Post"
+            -> { where(SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"]).order("#{SimpleForum::Post.quoted_table_name}.created_at DESC") },
+            class_name: "SimpleForum::Post"
 
     has_one :first_post,
-            :order => "#{SimpleForum::Post.quoted_table_name}.created_at ASC",
-            :conditions => SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"],
-            :class_name => "SimpleForum::Post"
+            -> { where(SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"]).order("#{SimpleForum::Post.quoted_table_name}.created_at ASC") }
+            class_name: "SimpleForum::Post"
 
 
-    validates :title, :forum, :presence => true
-    validates :user, :presence => true, :on => :create
-    validates :body, :presence => true, :on => :create
-    validate :forum_must_be_topicable, :on => :create
+    validates :title, :forum, presence: true
+    validates :user, presence: true, on: :create
+    validates :body, presence: true, on: :create
+    validate :forum_must_be_topicable, on: :create
 
     def forum_must_be_topicable
       errors.add(:base, t('simple_forum.validations.forum_must_be_topicable')) if forum && !forum.is_topicable?
@@ -41,7 +38,7 @@ module SimpleForum
 
     before_destroy :decrement_posts_counter_cache_for_forum
 
-    before_validation :set_default_attributes, :on => :create
+    before_validation :set_default_attributes, on: :create
     after_create :create_initial_post
     after_create :notify_user
 
@@ -50,12 +47,12 @@ module SimpleForum
 
     def update_cached_post_fields(post)
       if remaining_post = post.is_deleted ? last_post : post
-        self.class.update_all({:last_updated_at => remaining_post.created_at,
-                               :recent_post_id => remaining_post.id,
-                               :posts_count => posts.count(:id)
-                              }, {:id => id})
-        forum.class.update_all({:recent_post_id => remaining_post.id,
-                                :posts_count => forum.posts.count(:id)}, {:id => forum.id})
+        self.class.update_all({last_updated_at: remaining_post.created_at,
+                               recent_post_id: remaining_post.id,
+                               posts_count: posts.count(:id)
+                              }, {id: id})
+        forum.class.update_all({recent_post_id: remaining_post.id,
+                                posts_count: forum.posts.count(:id)}, {:id => forum.id})
       else
         destroy
       end
@@ -83,7 +80,7 @@ module SimpleForum
     end
 
     if respond_to?(:has_friendly_id)
-      has_friendly_id :title, :use_slug => true, :approximate_ascii => true
+      has_friendly_id :title, use_slug: true, approximate_ascii: true
     else
       def to_param
         "#{id}-#{title.to_s.parameterize}"
@@ -115,7 +112,7 @@ module SimpleForum
     private
 
     def decrement_posts_counter_cache_for_forum
-      forum.class.update_counters(forum.id, :posts_count => (-1) * posts.size) if forum
+      forum.class.update_counters(forum.id, posts_count: (-1) * posts.size) if forum
     end
 
     def set_default_attributes
@@ -123,7 +120,7 @@ module SimpleForum
     end
 
     def create_initial_post
-      p = self.posts.new(:body => @body) do |post|
+      p = self.posts.new(body: @body) do |post|
         post.user = user
       end
       p.save!
