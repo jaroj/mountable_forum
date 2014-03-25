@@ -23,7 +23,7 @@ module SimpleForum
             class_name: "SimpleForum::Post"
 
     has_one :first_post,
-            -> { where(SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"]).order("#{SimpleForum::Post.quoted_table_name}.created_at ASC") }
+            -> { where(SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"]).order("#{SimpleForum::Post.quoted_table_name}.created_at ASC") },
             class_name: "SimpleForum::Post"
 
 
