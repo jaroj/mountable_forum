@@ -3,45 +3,44 @@ module SimpleForum
     #acts_as_nested_set
 
     has_many :topics,
-             :order => "#{SimpleForum::Topic.quoted_table_name}.last_updated_at DESC",
-             :dependent => :destroy,
-             :class_name => "SimpleForum::Topic"
+             conditions: { order: "#{SimpleForum::Topic.quoted_table_name}.last_updated_at DESC" },
+             dependent: :destroy,
+             class_name: "SimpleForum::Topic"
 
     belongs_to :recent_topic,
-               :class_name => 'SimpleForum::Topic'
+               class_name: 'SimpleForum::Topic'
 
     has_many :posts,
-             :order => "#{SimpleForum::Post.quoted_table_name}.created_at DESC",
-             :conditions => SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"],
-             :class_name => 'SimpleForum::Post'
+             conditions: { order: "#{SimpleForum::Post.quoted_table_name}.created_at DESC", SimpleForum.show_deleted_posts ? ["1=1"] : ["#{SimpleForum::Post.quoted_table_name}.deleted_at IS NULL"] },
+             class_name: 'SimpleForum::Post'
 
     has_many :all_posts,
-             :order => "#{SimpleForum::Post.quoted_table_name}.created_at ASC",
-             :class_name => "SimpleForum::Post",
-             :dependent => :delete_all
+             conditions: { order: "#{SimpleForum::Post.quoted_table_name}.created_at ASC" },
+             class_name: "SimpleForum::Post",
+             dependent: :delete_all
 
     belongs_to :recent_post,
-               :class_name => 'SimpleForum::Post'
+               class_name: 'SimpleForum::Post'
 
     belongs_to :category,
-               :class_name => 'SimpleForum::Category'
+               class_name: 'SimpleForum::Category'
 
     has_many :moderatorships,
-             :class_name => 'SimpleForum::Moderatorship'
+             class_name: 'SimpleForum::Moderatorship'
 
     has_many :moderators,
-             :through => :moderatorships,
-             :source => :user
+             through: :moderatorships,
+             source: :user
 
     scope :default_order, -> { order("#{quoted_table_name}.position ASC, #{quoted_table_name}.id ASC") }
 
-    validates :name, :presence => true
-    validates :position, :presence => true, :numericality => {:only_integer => true, :allow_nil => true}
+    validates :name, presence: true
+    validates :position, presence: true, numericality: {only_integer: true, allow_nil: true}
 
     #attr_accessible :name, :body, :parent_id, :position, :moderator_ids, :category_id, :is_topicable
 
     if respond_to?(:has_friendly_id)
-      has_friendly_id :name, :use_slug => true, :approximate_ascii => true
+      has_friendly_id :name, use_slug: true, approximate_ascii: true
     else
       def to_param
         "#{id}-#{name.to_s.parameterize}"
