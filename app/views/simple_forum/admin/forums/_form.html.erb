@@ -15,7 +15,7 @@
         <%= f.input :body %>
         <%= f.input :position %>
         <%= f.input :is_topicable %>
-        <%= f.input :category_id, :as => :select, :collection => SimpleForum::Category.all.map { |c| [c.name, c.id] } %>
+        <%= f.input :category_id, :as => :select, :collection => SimpleForum::Category.load.pluck(:name, :id) %>
 
 
         <li class="input stringish">

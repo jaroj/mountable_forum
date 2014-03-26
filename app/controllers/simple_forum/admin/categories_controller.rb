@@ -3,7 +3,7 @@ module SimpleForum
     class CategoriesController < ::SimpleForum::Admin::BaseController
       # before_filter :cleanup_params
       def index
-        @categories = SimpleForum::Category.default_order.all
+        @categories = SimpleForum::Category.default_order.load
 
         respond_with(@categories)
       end

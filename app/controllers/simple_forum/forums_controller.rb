@@ -23,7 +23,7 @@ module SimpleForum
       @posts_search = Post.visible.includes([:topic]).where("#{SimpleForum::Topic.quoted_table_name}.title like ? OR #{SimpleForum::Post.quoted_table_name}.body like ?", q, q)
       @posts = @posts_search.respond_to?(:paginate) ?
           @posts_search.paginate(:page => params[:page], :per_page => params[:per_page] || SimpleForum::Post.per_page) :
-          @posts_search.all
+          @posts_search.load
 
     end
 

@@ -1,23 +1,23 @@
 module SimpleForum
   class Post < ::ActiveRecord::Base
     belongs_to :user,
-               :class_name => instance_eval(&SimpleForum.invoke(:user_class)).name
+               class_name: instance_eval(&SimpleForum.invoke(:user_class)).name
 
     belongs_to :edited_by,
-               :class_name => instance_eval(&SimpleForum.invoke(:user_class)).name
+               class_name: instance_eval(&SimpleForum.invoke(:user_class)).name
 
     belongs_to :deleted_by,
-               :class_name => instance_eval(&SimpleForum.invoke(:user_class)).name
+               class_name: instance_eval(&SimpleForum.invoke(:user_class)).name
 
     belongs_to :topic,
-               :counter_cache => true,
-               :class_name => "SimpleForum::Topic"
+               counter_cache: true,
+               class_name: "SimpleForum::Topic"
 
     belongs_to :forum,
-               :counter_cache => true,
-               :class_name => "SimpleForum::Forum"
+               counter_cache: true,
+               class_name: "SimpleForum::Forum"
 
-    before_validation :set_forum_id, :on => :create
+    before_validation :set_forum_id, on: :create
 
     after_create :update_cached_fields
     after_create :notify_user
@@ -26,13 +26,13 @@ module SimpleForum
     scope :recent, -> { order("#{quoted_table_name}.created_at DESC") }
 
     #attr_accessible :body
-    validates :topic, :forum, :user, :presence => true
-    validates :body, :presence => true
+    validates :topic, :forum, :user, presence: true
+    validates :body, presence: true
 
-    validate :topic_must_not_be_closed, :on => :create
+    validate :topic_must_not_be_closed, on: :create
 
     def topic_must_not_be_closed
-      errors.add(:base, I18n.t('simple_forum.errors.topic_is_close', :default => "Topic is closed.")) if topic && topic.is_closed?
+      errors.add(:base, I18n.t('simple_forum.errors.topic_is_close', default: "Topic is closed.")) if topic && topic.is_closed?
     end
 
     def on_page
@@ -103,7 +103,7 @@ module SimpleForum
       topic.update_cached_post_fields(self) if topic
       if user && user.respond_to?(:forum_posts_count)
         sc = SimpleForum.show_deleted_posts ? Post : Post.visible
-        user.class.update_all({:forum_posts_count => sc.where(:user_id => user.id).count}, {:id => user.id})
+        user.class.where(id: user.id).update_all(forum_posts_count: sc.where(user_id: user.id).count)
       end
     end
 

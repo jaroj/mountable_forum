@@ -51,7 +51,7 @@ module SimpleForum
     end
 
     def self.to_hash(collection=nil)
-      collection ||= only_read.all
+      collection ||= only_read.load
       {}.tap do |hash|
         collection.each do |a|
           hash[a.memoryable_type.to_sym] ||= {}
