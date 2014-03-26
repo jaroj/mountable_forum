@@ -62,7 +62,7 @@ module SimpleForum
 
     def self.bang(object, user)
       if am = load(object, user)
-        update_all({:read_at => Time.now}, {:id => am.id})
+        where(id: am.id)update_all(read_at: Time.now)
       else
         am = create_for(object, user)
       end
