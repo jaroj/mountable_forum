@@ -47,12 +47,17 @@ module SimpleForum
 
     def update_cached_post_fields(post)
       if remaining_post = post.is_deleted ? last_post : post
-        self.class.update_all({last_updated_at: remaining_post.created_at,
-                               recent_post_id: remaining_post.id,
-                               posts_count: posts.count(:id)
-                              }, {id: id})
-        forum.class.update_all({recent_post_id: remaining_post.id,
-                                posts_count: forum.posts.count(:id)}, {:id => forum.id})
+        self.class.where(id: id).update_all(last_updated_at: remaining_post.created_at,
+                                             recent_post_id: remaining_post.id,
+                                                posts_count: posts.count(:id))
+        # self.class.update_all({last_updated_at: remaining_post.created_at,
+        #                        recent_post_id: remaining_post.id,
+        #                        posts_count: posts.count(:id)
+        #                       }, {id: id})
+        forum.class.where(id: forum.id).update_all(recent_post_id: remaining_post.id,
+                                                      posts_count: forum.posts.count(:id))
+        # forum.class.update_all({recent_post_id: remaining_post.id,
+        #                         posts_count: forum.posts.count(:id)}, {:id => forum.id})
       else
         destroy
       end
